@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register Neon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: url("background.jpg") no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 850px;
+            height: 500px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 15px;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            transition: 0.6s ease-in-out;
+        }
+
+        .form-container {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.6s ease-in-out;
+            opacity: 0;
+        }
+
+        .form-container h1 {
+            margin-bottom: 15px;
+            font-size: 28px;
+            color: #f1f5f9;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f9fafb;
+            transition: 0.3s;
+        }
+
+        .form-container input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: #fff;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+        }
+
+        .form-container button:hover {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.9), 0 0 50px rgba(59, 130, 246, 0.6);
+        }
+
+        .social-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-container a {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #e5e7eb;
+            font-size: 18px;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .social-container a:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+        }
+
+        /* REGISTER aktif default */
+        .register-container {
+            left: 0;
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        /* LOGIN hidden */
+        .login-container {
+            right: 0;
+            opacity: 0;
+            transform: translateX(100%);
+            z-index: 1;
+        }
+
+        /* PANEL BIRU */
+        .overlay {
+            position: absolute;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: rgba(37, 99, 235, 0.85);
+            backdrop-filter: blur(12px);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 120px 0 0 120px;
+            padding: 40px;
+            transition: transform 0.6s ease-in-out, border-radius 0.6s ease-in-out;
+            z-index: 5;
+            box-shadow: -10px 0 30px rgba(37, 99, 235, 0.6);
+        }
+
+        .overlay h2 {
+            font-size: 30px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+        }
+
+        .overlay p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .overlay button {
+            padding: 12px 35px;
+            border: 2px solid #fff;
+            background: transparent;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .overlay button:hover {
+            background: #fff;
+            color: #2563eb;
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 50px rgba(37, 99, 235, 0.8);
+        }
+
+        /* MODE LOGIN */
+        .container.login-mode .register-container {
+            opacity: 0;
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        .container.login-mode .login-container {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .container.login-mode .overlay {
+            transform: translateX(-100%);
+            border-radius: 0 120px 120px 0;
+        }
+
+        /* RESPONSIVE HP */
+        @media(max-width: 768px) {
+            .container {
+                width: 100%;
+                max-width: 420px;
+                height: auto;
+                flex-direction: column;
+            }
+
+            .form-container {
+                position: relative;
+                width: 100%;
+                height: auto;
+                opacity: 1 !important;
+                transform: none !important;
+                z-index: 1;
+                padding: 20px;
+            }
+
+            .register-container {
+                order: 2;
+            }
+
+            .login-container {
+                order: 3;
+            }
+
+            /* Panel biru jadi panel geser atas-bawah */
+            .overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60%;
+                border-radius: 0 0 120px 120px;
+                box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
+                z-index: 10;
+                transform: translateY(0);
+            }
+
+            .container.login-mode .overlay {
+                transform: translateY(100%);
+                border-radius: 120px 120px 0 0;
+            }
+        }
+
+        /* PESAN */
+        .message {
+            margin: 5px 0 10px 0;
+            /* biar pas di bawah password */
+            font-size: 14px;
+            text-align: left;
+            /* rata kiri biar natural */
+            font-weight: 500;
+            opacity: 1;
+            transition: opacity 0.6s ease;
+        }
+
+
+        .message.success {
+            color: #22c55e;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+
+        .message.error {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .message.fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <!-- PANEL BIRU -->
+        <div class="overlay">
+            <h2 id="overlayTitle">Welcome Back!</h2>
+            <p id="overlayText">Already have an account?</p>
+            <button id="toggleBtn">Login</button>
+        </div>
+
+        <!-- REGISTER -->
+        <!-- REGISTER -->
+        <div class="form-container register-container">
+            <h1>Registration</h1>
+            <input type="text" id="regUsername" placeholder="Username" />
+            <input type="email" id="regEmail" placeholder="Email" />
+            <input type="password" id="regPassword" placeholder="Password" />
+            <p class="message" id="registerMsg"></p> <!-- pesan pindah ke bawah password -->
+            <button id="registerBtn">Register</button>
+
+            <div class="social-container">
+                <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/google.svg"
+                        width="20"></a>
+                <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg"
+                        width="20"></a>
+                <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg"
+                        width="20"></a>
+                <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg"
+                        width="20"></a>
+            </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="form-container login-container">
+            <h1>Login</h1>
+            <input type="text" id="loginUsername" placeholder="Username" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+            <p class="message" id="loginMsg"></p> <!-- pesan pindah ke bawah password -->
+            <button id="loginBtn">Login</button>
+        </div>
+
+
+        <script>
+            const container = document.getElementById('container');
+            const toggleBtn = document.getElementById('toggleBtn');
+            const overlayTitle = document.getElementById('overlayTitle');
+            const overlayText = document.getElementById('overlayText');
+            const registerBtn = document.getElementById('registerBtn');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerMsg = document.getElementById('registerMsg');
+            const loginMsg = document.getElementById('loginMsg');
+
+            // Fungsi tampilkan pesan lalu hilangkan dengan fade
+            function showMessage(element, text, type) {
+                element.textContent = text;
+                element.className = "message " + type;
+
+                // mulai fade setelah 2.5 detik
+                setTimeout(() => {
+                    element.classList.add("fade-out");
+                }, 2500);
+
+                // hapus setelah 3.1 detik
+                setTimeout(() => {
+                    element.textContent = "";
+                    element.className = "message";
+                }, 3100);
+            }
+
+            // toggle panel
+            toggleBtn.addEventListener('click', () => {
+                container.classList.toggle('login-mode');
+
+                if (container.classList.contains('login-mode')) {
+                    overlayTitle.textContent = 'Hello, Friend!';
+                    overlayText.textContent = "Don't have an account?";
+                    toggleBtn.textContent = 'Register';
+                } else {
+                    overlayTitle.textContent = 'Welcome Back!';
+                    overlayText.textContent = 'Already have an account?';
+                    toggleBtn.textContent = 'Login';
+                }
+            });
+
+            // Register
+            registerBtn.addEventListener('click', () => {
+                const user = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const pass = document.getElementById('regPassword').value;
+
+                if (user && email && pass) {
+                    localStorage.setItem('user', JSON.stringify({ user, email, pass }));
+                    container.classList.add('login-mode');
+                    showMessage(registerMsg, "Register sukses! Silakan login.", "success");
+                } else {
+                    showMessage(registerMsg, "Harap isi semua field.", "error");
+                }
+            });
+
+            // Login
+            loginBtn.addEventListener('click', () => {
+                const loginUser = document.getElementById('loginUsername').value;
+                const loginPass = document.getElementById('loginPassword').value;
+                const savedUser = JSON.parse(localStorage.getItem('user'));
+
+                if (savedUser && loginUser === savedUser.user && loginPass === savedUser.pass) {
+                    showMessage(loginMsg, "Login berhasil! Mengalihkan...", "success");
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 1500);
+                } else {
+                    showMessage(loginMsg, "Username atau password salah!", "error");
+                }
+            });
+        </script>
+</body>
+
+</html>

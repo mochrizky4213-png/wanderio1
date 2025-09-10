@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wanderio - Modern Travel Experience</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 100%);
+            background-attachment: fixed;
+            color: white;
+            padding-bottom: 120px;
+            /* Increased padding to prevent footer overlap */
+            font-family: "Inter", "Segoe UI", sans-serif;
+            transition: all 0.6s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 200, 255, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body.fade-out {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+
+        /* Enhanced Navbar */
+        .navbar {
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            animation: slideDown 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.3));
+            }
+
+            to {
+                filter: drop-shadow(0 0 15px rgba(123, 104, 238, 0.5));
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Premium Carousel */
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            margin: 0 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .carousel img {
+            height: 250px;
+            object-fit: cover;
+            border-radius: 20px;
+            filter: brightness(0.8) contrast(1.1);
+            transition: all 0.8s ease;
+        }
+
+        .carousel-item.active img {
+            animation: zoomScale 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes zoomScale {
+            from {
+                transform: scale(1.1);
+                filter: brightness(0.6);
+            }
+
+            to {
+                transform: scale(1);
+                filter: brightness(0.8);
+            }
+        }
+
+        /* Floating Categories */
+        .kategori-bar {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            padding: 25px 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .kategori-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .kategori-item {
+            flex: 0 0 auto;
+            width: 90px;
+            text-align: center;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            position: relative;
+        }
+
+        .kategori-item.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .kategori-item.active {
+            color: #00d4ff;
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .kategori-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            font-size: 1.5rem;
+            color: #00d4ff;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kategori-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transform: rotate(-45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .kategori-item:hover .kategori-icon {
+            transform: scale(1.15) rotate(10deg);
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            color: white;
+            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .kategori-item:hover .kategori-icon::before {
+            opacity: 1;
+            transform: rotate(-45deg) translate(20%, 20%);
+        }
+
+        .kategori-item:hover {
+            color: #fff;
+            transform: translateY(-8px) scale(1.1);
+        }
+
+        /* Premium Cards */
+        .card {
+            background: linear-gradient(145deg, rgba(30, 30, 50, 0.95), rgba(20, 20, 35, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #7b68ee, #ff6b9d);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.15),
+                0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 212, 255, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-body img {
+            display: block;
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.4s ease;
+            filter: brightness(0.9) contrast(1.1);
+        }
+
+        .card:hover img {
+            filter: brightness(1) contrast(1.2);
+            transform: scale(1.05);
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        /* Enhanced Rating & Button */
+        .rating-btn-wrapper {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-modern:hover {
+            background: linear-gradient(135deg, #7b68ee, #ff6b9d);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(123, 104, 238, 0.4);
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .rating {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .rating i {
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.3));
+        }
+
+        /* Premium Search */
+        .search-box {
+            position: relative;
+            width: 250px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .search-box:focus-within {
+            width: 320px;
+            transform: scale(1.02);
+        }
+
+        .search-input {
+            padding: 12px 20px 12px 45px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #00d4ff;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within .search-icon {
+            color: #7b68ee;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Cards Container - Added margin bottom for footer spacing */
+        .cards-container {
+            margin-bottom: 40px;
+            /* Extra space before footer */
+        }
+
+        /* Enhanced Footer - Centered at bottom */
+        .footer-menu {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 450px;
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.95), rgba(20, 20, 35, 0.9));
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            z-index: 999;
+            animation: slideUpCentered 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .footer-item {
+            flex: 1;
+            text-align: center;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: 12px 8px;
+            border-radius: 20px;
+            position: relative;
+            max-width: 120px;
+        }
+
+        .footer-item i {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 6px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .footer-item.active,
+        .footer-item:hover {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.15);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .footer-item.active i,
+        .footer-item:hover i {
+            color: #00d4ff;
+            transform: scale(1.3);
+            filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6));
+        }
+
+        .footer-item:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 4px;
+        }
+
+        @keyframes slideUpCentered {
+            from {
+                transform: translateX(-50%) translateY(120%);
+                opacity: 0;
+                scale: 0.9;
+            }
+
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+                scale: 1;
+            }
+        }
+
+        /* Scroll Enhancements */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            border-radius: 4px;
+        }
+
+        /* Loading Animation */
+        .loading-shimmer {
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.05) 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(255, 255, 255, 0.05) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        /* Responsive Enhancements */
+        @media (max-width: 576px) {
+            body {
+                padding-bottom: 100px;
+                /* Adjusted for smaller screens */
+            }
+
+            .search-box {
+                width: 60%;
+            }
+
+            .search-box:focus-within {
+                width: 85%;
+            }
+
+            .card-body img {
+                height: 140px;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .card-text {
+                font-size: 0.8rem;
+                line-height: 1.4;
+            }
+
+            .btn-modern {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+                min-width: 70px;
+            }
+
+            .rating {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1px;
+            }
+
+            .rating i {
+                font-size: 0.8rem;
+            }
+
+            .rating span {
+                font-size: 0.7rem;
+            }
+
+            .rating-btn-wrapper {
+                gap: 5px;
+                padding-top: 10px;
+                flex-direction: row;
+                align-items: flex-end;
+            }
+
+            .kategori-item {
+                width: 80px;
+                font-size: 0.8rem;
+            }
+
+            .footer-menu {
+                width: 95%;
+                bottom: 10px;
+                padding: 15px 10px;
+                /* Reduced padding for mobile */
+            }
+
+            .footer-item span {
+                font-size: 11px;
+            }
+
+            .carousel img {
+                height: 200px;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-modern {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+                min-width: 60px;
+            }
+
+            .card-body {
+                padding: 12px;
+            }
+
+            .rating-btn-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .rating {
+                justify-content: center;
+                flex-direction: row;
+            }
+
+            .btn-modern {
+                align-self: stretch;
+                text-align: center;
+            }
+        }
+
+        /* Additional Micro-animations */
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Enhanced Navbar -->
+    <nav class="navbar text-white">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white fw-bold pulse">Wanderio</a>
+            <div class="d-flex align-items-center">
+                <div class="search-box">
+                    <input id="searchInput" class="form-control search-input" type="search"
+                        placeholder="Jelajahi destinasi impian..." aria-label="Search" />
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Premium Carousel -->
+    <div id="carouselExampleFade" class="carousel slide carousel-fade mt-4" data-bs-ride="carousel"
+        data-bs-interval="3000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="masjid1.jpeg" class="d-block w-100" alt="Masjid Agung">
+            </div>
+            <div class="carousel-item">
+                <img src="bris1.jpg" class="d-block w-100" alt="Waterpark">
+            </div>
+            <div class="carousel-item">
+                <img src="masjid1.jpeg" class="d-block w-100" alt="Alam">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Floating Categories -->
+    <div class="container-fluid mt-4 ">
+        <div class="kategori-bar">
+            <div class="kategori-item active" data-kategori="semua">
+                <div class="kategori-icon float"><i class="fas fa-th-large"></i></div>
+                <div>Semua</div>
+            </div>
+            <div class="kategori-item" data-kategori="pantai">
+                <div class="kategori-icon"><i class="fas fa-umbrella-beach"></i></div>
+                <div>Pantai</div>
+            </div>
+            <div class="kategori-item" data-kategori="pegunungan">
+                <div class="kategori-icon"><i class="fas fa-mountain"></i></div>
+                <div>Gunung</div>
+            </div>
+            <div class="kategori-item" data-kategori="kuliner">
+                <div class="kategori-icon"><i class="fas fa-utensils"></i></div>
+                <div>Kuliner</div>
+            </div>
+            <div class="kategori-item" data-kategori="sejarah">
+                <div class="kategori-icon"><i class="fas fa-landmark"></i></div>
+                <div>Sejarah</div>
+            </div>
+            <div class="kategori-item" data-kategori="hiburan">
+                <div class="kategori-icon"><i class="fas fa-gamepad"></i></div>
+                <div>Hiburan</div>
+            </div>
+            <div class="kategori-item" data-kategori="alam">
+                <div class="kategori-icon"><i class="fas fa-tree"></i></div>
+                <div>Alam</div>
+            </div>
+            <div class="kategori-item" data-kategori="premium">
+                <div class="kategori-icon"><i class="fas fa-crown"></i></div>
+                <div>Premium</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Card Grid with proper spacing -->
+    <div class="cards-container">
+        <div class="row g-4 p-4">
+            <div class="col-6 col-sm-4 col-lg-3" data-kategori="sejarah" data-rating="4.8">
+                <div class="card text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🕌 Masjid Agung</h5>
+                        <img src="masjid agung.jpg" alt="Masjid Agung">
+                        <p class="card-text">Ikon bersejarah dan pusat spiritual dengan arsitektur megah yang memukau
+                            pengunjung dari berbagai penjuru.</p>
+                        <div class="rating-btn-wrapper">
+                            <div class="rating"></div>
+                            <button class="btn btn-modern page-link" data-url="wisata1.html">
+                                <i class="fas fa-eye"></i> Jelajahi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-lg-3" data-kategori="hiburan" data-rating="4.5">
+                <div class="card text-white h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🏊 Bris Waterpark</h5>
+                        <img src="bris.jpg" alt="Waterpark">
+                        <p class="card-text">Destinasi rekreasi keluarga premium dengan wahana air seru, slide ekstrem,
+                            dan
+                            kolam relaksasi yang menyegarkan.</p>
+                        <div class="rating-btn-wrapper">
+                            <div class="rating"></div>
+                            <button class="btn btn-modern page-link" data-url="wisata2.html">
+                                <i class="fas fa-eye"></i> Jelajahi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-menu">
+        <a href="index.html" class="footer-item active">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </a>
+        <a href="ai.html" class="footer-item page-link">
+            <i class="fas fa-robot"></i>
+            <span>AI Guide</span>
+        </a>
+        <a href="login.html" class="footer-item page-link">
+            <i class="fas fa-user-circle"></i>
+            <span>Profil</span>
+        </a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Enhanced Animation System
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeAnimations();
+            setupFilterSystem();
+            setupRatingSystem();
+            setupPageTransitions();
+            setupParallaxEffects();
+        });
+
+        function initializeAnimations() {
+            const cards = document.querySelectorAll(".card");
+            const kategori = document.querySelectorAll(".kategori-item");
+
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add("show");
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            // Staggered animation for cards
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // Staggered animation for categories
+            kategori.forEach((kat, index) => {
+                kat.style.transitionDelay = `${index * 0.05}s`;
+                observer.observe(kat);
+            });
+        }
+
+        function setupFilterSystem() {
+            const kategoriItems = document.querySelectorAll(".kategori-item");
+            const semuaCol = document.querySelectorAll(".row .col-6, .row .col-sm-4, .row .col-lg-3");
+            const searchInput = document.getElementById("searchInput");
+            let kategoriAktif = "semua";
+
+            function updateFilter() {
+                const searchValue = searchInput.value.toLowerCase();
+
+                semuaCol.forEach((col, index) => {
+                    const kategori = col.getAttribute("data-kategori");
+                    const text = col.innerText.toLowerCase();
+                    const cocokKategori = (kategoriAktif === "semua" || kategori === kategoriAktif);
+                    const cocokSearch = text.includes(searchValue);
+                    const show = cocokKategori && cocokSearch;
+
+                    if (show) {
+                        col.classList.remove('d-none');
+                        setTimeout(() => {
+                            col.querySelector('.card').classList.add('show');
+                        }, index * 50);
+                    } else {
+                        col.querySelector('.card').classList.remove('show');
+                        setTimeout(() => {
+                            col.classList.add('d-none');
+                        }, 200);
+                    }
+                });
+            }
+
+            // Enhanced search with debounce
+            let searchTimeout;
+            searchInput.addEventListener("input", () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(updateFilter, 300);
+            });
+
+            // Category filter with smooth transitions
+            kategoriItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    // Remove active class from all items
+                    kategoriItems.forEach(i => i.classList.remove('active'));
+
+                    // Add active class to clicked item
+                    this.classList.add('active');
+
+                    kategoriAktif = this.getAttribute("data-kategori");
+                    updateFilter();
+
+                    // Add ripple effect
+                    createRippleEffect(this);
+                });
+            });
+        }
+
+        function setupRatingSystem() {
+            document.querySelectorAll("[data-rating]").forEach(col => {
+                const ratingValue = parseFloat(col.getAttribute("data-rating")) || 0;
+                const ratingContainer = col.querySelector(".rating");
+
+                if (ratingContainer) {
+                    ratingContainer.innerHTML = '';
+                    const fullStars = Math.floor(ratingValue);
+                    const hasHalfStar = ratingValue % 1 >= 0.5;
+
+                    // Add full stars with animation
+                    for (let i = 0; i < fullStars; i++) {
+                        setTimeout(() => {
+                            const star = document.createElement('i');
+                            star.className = 'fas fa-star';
+                            star.style.animationDelay = `${i * 0.1}s`;
+                            ratingContainer.appendChild(star);
+                        }, i * 100);
+                    }
+
+                    // Add half star if needed
+                    if (hasHalfStar) {
+                        setTimeout(() => {
+                            const halfStar = document.createElement('i');
+                            halfStar.className = 'fas fa-star-half-alt';
+                            ratingContainer.appendChild(halfStar);
+                        }, fullStars * 100);
+                    }
+
+                    // Add empty stars
+                    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                    for (let i = 0; i < emptyStars; i++) {
+                        setTimeout(() => {
+                            const emptyStar = document.createElement('i');
+                            emptyStar.className = 'far fa-star';
+                            ratingContainer.appendChild(emptyStar);
+                        }, (fullStars + (hasHalfStar ? 1 : 0) + i) * 100);
+                    }
+
+                    // Add rating number
+                    const ratingNumber = document.createElement('span');
+                    ratingNumber.textContent = ` ${ratingValue}`;
+                    ratingNumber.style.fontSize = '0.85rem';
+                    ratingNumber.style.marginLeft = '5px';
+                    ratingNumber.style.color = 'rgba(255, 255, 255, 0.7)';
+                    ratingContainer.appendChild(ratingNumber);
+                }
+            });
+        }
+
+        function setupPageTransitions() {
+            document.querySelectorAll(".page-link").forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    const targetUrl = this.getAttribute("data-url") || this.getAttribute("href");
+                    if (!targetUrl || targetUrl === '#') return;
+
+                    // Add loading state
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                    this.disabled = true;
+
+                    // Fade out animation
+                    document.body.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 600);
+                });
+            });
+        }
+
+        function setupParallaxEffects() {
+            const carousel = document.querySelector('.carousel');
+            const navbar = document.querySelector('.navbar');
+
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.5;
+
+                if (carousel) {
+                    carousel.style.transform = `translateY(${rate}px)`;
+                }
+
+                // Navbar backdrop blur effect
+                if (navbar) {
+                    const blurAmount = Math.min(scrolled / 100, 1);
+                    navbar.style.backdropFilter = `blur(${10 + (blurAmount * 10)}px)`;
+                    navbar.style.background = `rgba(10, 10, 20, ${0.8 + (blurAmount * 0.15)})`;
+                }
+            });
+        }
+
+        function createRippleEffect(element) {
+            const ripple = document.createElement('div');
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (rect.width / 2 - size / 2) + 'px';
+            ripple.style.top = (rect.height / 2 - size / 2) + 'px';
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(0, 212, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s linear';
+            ripple.style.pointerEvents = 'none';
+
+            element.style.position = 'relative';
+            element.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Enhanced touch interactions for mobile
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.card, .kategori-item').forEach(element => {
+                element.addEventListener('touchstart', function () {
+                    this.style.transform = 'scale(0.98)';
+                });
+
+                element.addEventListener('touchend', function () {
+                    this.style.transform = '';
+                });
+            });
+        }
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        // Service Worker for offline support (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+
+        // Add CSS animation keyframes dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes cardHover {
+                0% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-5px) scale(1.02); }
+                100% { transform: translateY(-8px) scale(1.03); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>
